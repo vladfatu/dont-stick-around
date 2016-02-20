@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Don'tStickAround.iml" filepath="$PROJECT_DIR$/Don'tStickAround.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dont-stick-around.iml" filepath="$PROJECT_DIR$/dont-stick-around.iml" />
     </modules>
   </component>
 </project>

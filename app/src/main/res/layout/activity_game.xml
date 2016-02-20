@@ -35,6 +35,27 @@
             android:textSize="70dp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/gameOverScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/gameOverText"
+            android:layout_marginTop="10dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/retry"
+            android:id="@+id/button"
+            android:onClick="onRetryClicked"
+            android:layout_below="@+id/gameOverScore"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true" />
+
     </RelativeLayout>
 
 </RelativeLayout>

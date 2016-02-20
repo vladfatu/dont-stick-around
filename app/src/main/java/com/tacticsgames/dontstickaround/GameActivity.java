@@ -15,15 +15,25 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
 
     private static final int JUMP_LENGTH = 50;
+    private static final int OBSTACLE_COUNT = 10;
 
     private ImageView circleImage;
-    private int bottomInPixels;
     private View gameOverLayout;
+    private TextView gameOverScore;
+    private RelativeLayout gameLayout;
+    private boolean gameOver;
+
+    private int bottomInPixels;
+    private int passedObstacles;
+
+    private Map<Integer, View> obstacles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,30 +41,46 @@ public class GameActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_game);
 
+        gameLayout = RelativeLayout.class.cast(findViewById(R.id.game_content));
         circleImage = ImageView.class.cast(findViewById(R.id.circleImage));
         gameOverLayout = findViewById(R.id.gameOverLayout);
+        gameOverScore = TextView.class.cast(findViewById(R.id.gameOverScore));
 
-        addObstacle(900);
-
+        initialiseObstacles();
+        startObstacles();
     }
 
-    private void addObstacle(int bottomMargin) {
-        RelativeLayout layout = RelativeLayout.class.cast(findViewById(R.id.game_content));
+    private void startObstacles(){
+        gameOverLayout.setVisibility(View.GONE);
+        gameOver = false;
+        passedObstacles = 0;
+        startObstacleAnimations();
+    }
 
-        ImageView obstacle = new ImageView(this);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        layoutParams.bottomMargin = bottomMargin;
-        obstacle.setLayoutParams(layoutParams);
+    private void initialiseObstacles() {
+        obstacles = new HashMap<>();
+        for (int i=0; i<OBSTACLE_COUNT; i++) {
+            View obstacleView = getObstacleView();
+            obstacles.put(i, obstacleView);
+            gameLayout.addView(obstacleView);
+        }
+    }
 
-        obstacle.setImageResource(R.drawable.circle);
+    private void startObstacleAnimations() {
+        for (int i=0; i<OBSTACLE_COUNT; i++) {
+            startObstacleAnimation(i);
+        }
+    }
 
-        layout.addView(obstacle);
+    private void startObstacleAnimation(final int id) {
+        Random random = new Random();
+        View obstacle = obstacles.get(id);
+        ViewGroup.MarginLayoutParams params = ViewGroup.MarginLayoutParams.class.cast(obstacle.getLayoutParams());
+        params.rightMargin = 0;
+        params.bottomMargin = random.nextInt(900);
+        obstacle.setLayoutParams(params);
         Animation a = new TranslateXAnimation(obstacle, getScreenWidth());
-        a.setDuration(getDpFromPixels(getScreenWidth()) * 10 / 2);
+        a.setDuration((int)(getDpFromPixels(getScreenWidth()) * 10 / (1 + (random.nextFloat()*3))));
         a.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -63,10 +89,10 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                Random random = new Random();
-                //TODO make this more efficient
-                addObstacle(random.nextInt(900));
-                gameOverLayout.setVisibility(View.GONE);
+                if (! gameOver) {
+                    startObstacleAnimation(id);
+                    passedObstacles++;
+                }
             }
 
             @Override
@@ -75,6 +101,19 @@ public class GameActivity extends AppCompatActivity {
             }
         });
         obstacle.startAnimation(a);
+    }
+
+    private View getObstacleView() {
+        ImageView obstacle = new ImageView(this);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        obstacle.setLayoutParams(layoutParams);
+
+        obstacle.setImageResource(R.drawable.circle);
+        return obstacle;
     }
 
     private void translateImageUpWithAnimation() {
@@ -109,6 +148,10 @@ public class GameActivity extends AppCompatActivity {
         translateImageUpWithAnimation();
     }
 
+    public void onRetryClicked(View view) {
+        startObstacles();
+    }
+
     private void translateImageWithLayout() {
         bottomInPixels += getPixelsFromDp(20);
         ViewGroup.MarginLayoutParams layoutParams = ViewGroup.MarginLayoutParams.class.cast(circleImage.getLayoutParams());
@@ -141,7 +184,11 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void showGameOver() {
-        gameOverLayout.setVisibility(View.VISIBLE);
+        if (!gameOver) {
+            gameOver = true;
+            gameOverScore.setText(Integer.toString(passedObstacles));
+            gameOverLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private class TranslateYAnimation extends Animation {
