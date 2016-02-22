@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends PlayServicesActivity {
 
     private static final int JUMP_LENGTH = 50;
     private static final int OBSTACLE_COUNT = 10;
@@ -48,6 +48,11 @@ public class GameActivity extends AppCompatActivity {
 
         initialiseObstacles();
         startObstacles();
+    }
+
+    @Override
+    protected String getScreenName() {
+        return getLocalClassName();
     }
 
     private void startObstacles(){
@@ -186,6 +191,11 @@ public class GameActivity extends AppCompatActivity {
     private void showGameOver() {
         if (!gameOver) {
             gameOver = true;
+            unlockAchievement(R.string.achievement_first_blood);
+            submitScoreToLeaderBoard(R.string.leaderboard_best_score, passedObstacles);
+            submitEvent(R.string.event_games_played, 1);
+            submitEvent(R.string.event_total_score, passedObstacles);
+            incrementAchievement(R.string.achievement_total_score_1000, passedObstacles);
             gameOverScore.setText(Integer.toString(passedObstacles));
             gameOverLayout.setVisibility(View.VISIBLE);
         }

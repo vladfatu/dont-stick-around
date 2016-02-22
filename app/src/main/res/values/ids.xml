@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_id">724927267050</string>
+    <string name="package_name">com.tacticsgames.dontstickaround</string>
+
+    <string name="achievement_first_blood">CgkI6oGhyIwVEAIQAg</string>
+    <string name="achievement_total_score_1000">CgkI6oGhyIwVEAIQAw</string>
+    <string name="achievement_third">CgkI6oGhyIwVEAIQBA</string>
+    <string name="achievement_forth">CgkI6oGhyIwVEAIQBQ</string>
+    <string name="achievement_fifth">CgkI6oGhyIwVEAIQBg</string>
+
+    <string name="leaderboard_best_score">CgkI6oGhyIwVEAIQAA</string>
+
+    <string name="event_games_played">CgkI6oGhyIwVEAIQCQ</string>
+    <string name="event_total_score">CgkI6oGhyIwVEAIQCg</string>
+
+    <string name="analytics_category_action">Action</string>
+
+    <string name="analytics_event_start_game">StartGame</string>
+    <string name="analytics_event_view_achievements">ViewAchievements</string>
+    <string name="analytics_event_view_achievements_failed">ViewAchievementsFailed</string>
+    <string name="analytics_event_view_leaderboards">ViewLeaderBoards</string>
+    <string name="analytics_event_view_leaderboards_failed">ViewLeaderBoardsFailed</string>
+</resources>
