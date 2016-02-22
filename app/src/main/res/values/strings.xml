@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Don\'t Stick Around</string>
 
+    <string name="interstitial_ad_unit_id">ca-app-pub-4668622539935763/9955792338</string>
+
     <string name="dummy_button">Dummy Button</string>
     <string name="game_over">Game Over!</string>
     <string name="retry">Retry</string>

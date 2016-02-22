@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -23,6 +26,8 @@ public class GameActivity extends PlayServicesActivity {
 
     private static final int JUMP_LENGTH = 50;
     private static final int OBSTACLE_COUNT = 10;
+
+    private InterstitialAd mInterstitialAd;
 
     private ImageView circleImage;
     private View gameOverLayout;
@@ -41,6 +46,9 @@ public class GameActivity extends PlayServicesActivity {
 
         setContentView(R.layout.activity_game);
 
+        setupAd();
+        requestNewInterstitial();
+
         gameLayout = RelativeLayout.class.cast(findViewById(R.id.game_content));
         circleImage = ImageView.class.cast(findViewById(R.id.circleImage));
         gameOverLayout = findViewById(R.id.gameOverLayout);
@@ -48,6 +56,24 @@ public class GameActivity extends PlayServicesActivity {
 
         initialiseObstacles();
         startObstacles();
+    }
+
+    private void setupAd() {
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_unit_id));
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("A9A71D5CD236AB4E5565199A22CB660D")
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
+    }
+
+    private void showAd() {
+        mInterstitialAd.show();
+        requestNewInterstitial();
     }
 
     @Override
@@ -190,6 +216,7 @@ public class GameActivity extends PlayServicesActivity {
 
     private void showGameOver() {
         if (!gameOver) {
+            showAd();
             gameOver = true;
             unlockAchievement(R.string.achievement_first_blood);
             submitScoreToLeaderBoard(R.string.leaderboard_best_score, passedObstacles);
